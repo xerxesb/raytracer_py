@@ -94,7 +94,10 @@ class Vec3:
                     u.x * v.y - u.y * v.x
                     )
 
-    
+    @staticmethod
+    def unit_vector(v : Vec3):
+        return v / v.length()
+
 
 # Test
 if __name__ == "__main__":
@@ -114,3 +117,4 @@ if __name__ == "__main__":
     print(f"Test 13:	{Vec3(2, 3, 4) * v}")
     print(f"Test 14:	{Vec3.dot(v, Vec3(2, 3, 4))}")
     print(f"Test 15:	{Vec3.cross(v, Vec3(2, 3, 4))}")
+    print(f"Test 16:	{Vec3.unit_vector(v)}")

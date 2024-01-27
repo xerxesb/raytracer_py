@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm out.ppm && python3 main.py > out.ppm && playpen/qlf.sh out.ppm
+rm -f out.ppm && python3 main.py > out.ppm && playpen/qlf.sh out.ppm
