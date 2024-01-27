@@ -6,8 +6,19 @@ from lib.ray import Ray
 from lib.point3 import Point3
 from lib.vec3 import Vec3
 
+def hit_sphere(center : Point3, radius : float, r : Ray):
+  oc : Vec3 = r.origin - center
+  a : Vec3 = Vec3.dot(r.direction, r.direction)
+  b : Vec3 = 2.0 * Vec3.dot(oc, r.direction)
+  c : Vec3 = Vec3.dot(oc, oc) - radius * radius
+  disciminant : float = b * b - 4 * a * c
+  return disciminant > 0
+
 # Helper function 
 def ray_color(r : Ray):
+  if (hit_sphere(Point3(0, 0, -1), 0.5, r)):
+    return Color(1, 0, 0)
+
   unit_direction : Vec3 = Vec3.unit_vector(r.direction)
   t : float = 0.5 * (unit_direction.y + 1.0)
   return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0)
