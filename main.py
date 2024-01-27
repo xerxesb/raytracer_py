@@ -11,11 +11,11 @@ from lib.vec3 import Vec3
 
 def hit_sphere(center : Point3, radius : float, r : Ray) -> float:
   oc : Vec3 = r.origin - center
-  a : Vec3 = Vec3.dot(r.direction, r.direction)
-  b : Vec3 = 2.0 * Vec3.dot(oc, r.direction)
-  c : Vec3 = Vec3.dot(oc, oc) - radius * radius
-  discriminant : float = b * b - 4 * a * c
-  return -1.0 if discriminant < 0 else (-b - math.sqrt(discriminant)) / (2.0 * a)
+  a : Vec3 = r.direction.length_squared()
+  half_b : Vec3 = Vec3.dot(oc, r.direction)
+  c : float = oc.length_squared() - radius * radius
+  discriminant : float = half_b * half_b - a * c
+  return -1.0 if discriminant < 0 else (-half_b - math.sqrt(discriminant)) / a
 
 def ray_color(r : Ray) -> Color:
   t : float = hit_sphere(Point3(0, 0, -1), 0.5, r)
