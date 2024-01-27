@@ -4,6 +4,10 @@ if __name__ == "__main__":
 
 from lib.vec3 import Vec3
 
+# Forward declaration of Vec3 class to allow for operator overloading
+class Color:
+    pass
+
 # Color class is an alias for Vec3
 class Color(Vec3):
     def __init__(self, x, y=0, z=0):
@@ -15,22 +19,22 @@ class Color(Vec3):
     def __str__(self):
         return f"{int(255.999 * self.x)} {int(255.999 * self.y)} {int(255.999 * self.z)}"
 
-    def __add__(self, other):
+    def __add__(self, other : Color):
         return Color(super().__add__(other))
     
-    def __sub__(self, other):
+    def __sub__(self, other : Color):
         return Color(super().__sub__(other))
 
-    def __mul__(self, other):
+    def __mul__(self, other : Color):
         return Color(super().__mul__(other))
     
-    def __rmul__(self, other):
+    def __rmul__(self, other : Color):
         return Color(super().__rmul__(other))
     
-    def __truediv__(self, other):
+    def __truediv__(self, other : Color):
         return Color(super().__truediv__(other))
     
-    def __rtruediv__(self, other):
+    def __rtruediv__(self, other : Color):
         return Color(super().__rtruediv__(other))
     
     # undefine length method

@@ -1,38 +1,30 @@
 import math
 
+# Forward declaration of Vec3 class to allow for operator overloading
 class Vec3:
-    def __init__(self, x, y, z):
+    pass
+
+class Vec3:
+    def __init__(self, x : float, y : float, z : float):
         self.x = x
         self.y = y
         self.z = z
     
-    # Static methods
-    def dot(u, v):
-        return u.x * v.x + u.y * v.y + u.z * v.z
-    
-    def cross(u, v):
-        return Vec3(u.y * v.z - u.z * v.y,
-                    u.z * v.x - u.x * v.z,
-                    u.x * v.y - u.y * v.x
-                    )
-
-    
-    # Operator overloading
-
-    def __add__(self, other):
+    # Operator overloads
+    def __add__(self, other : Vec3):
         return Vec3(self.x + other.x, 
                     self.y + other.y, 
                     self.z + other.z
                     )
           
-    def __sub__(self, other):
+    def __sub__(self, other : Vec3):
         return Vec3(self.x - other.x, 
                     self.y - other.y, 
                     self.z - other.z
                     )
 
     def __mul__(self, other):
-        if isinstance(other, Vec3):
+        if isinstance(other, self.__class__):
             return Vec3(self.x * other.x, 
                         self.y * other.y, 
                         self.z * other.z
@@ -44,7 +36,7 @@ class Vec3:
                         )
     
     def __rmul__(self, other):
-        if isinstance(other, Vec3):
+        if isinstance(other, self.__class__):
             return Vec3(other.x * self.x, 
                         other.y * self.y, 
                         other.z * self.z
@@ -56,7 +48,7 @@ class Vec3:
                         )
     
     def __truediv__(self, other):
-        if isinstance(other, Vec3):
+        if isinstance(other, self.__class__):
             return Vec3(self.x / other.x, 
                         self.y / other.y, 
                         self.z / other.z
@@ -68,7 +60,7 @@ class Vec3:
                         )
 
     def __rtruediv__(self, other):
-        if isinstance(other, Vec3):
+        if isinstance(other, self.__class__):
             return Vec3(other.x / self.x, 
                         other.y / self.y, 
                         other.z / self.z
@@ -88,6 +80,21 @@ class Vec3:
     def __str__(self):
         return f"({self.x}, {self.y}, {self.z})"
 
+    # Static class methods
+
+    @staticmethod
+    def dot(u : Vec3, v : Vec3):
+        return u.x * v.x + u.y * v.y + u.z * v.z
+
+
+    @staticmethod
+    def cross(u : Vec3, v : Vec3):
+        return Vec3(u.y * v.z - u.z * v.y,
+                    u.z * v.x - u.x * v.z,
+                    u.x * v.y - u.y * v.x
+                    )
+
+    
 
 # Test
 if __name__ == "__main__":
@@ -107,5 +114,3 @@ if __name__ == "__main__":
     print(f"Test 13:	{Vec3(2, 3, 4) * v}")
     print(f"Test 14:	{Vec3.dot(v, Vec3(2, 3, 4))}")
     print(f"Test 15:	{Vec3.cross(v, Vec3(2, 3, 4))}")
-    print(f"Test 16:	{v.cross(Vec3(2, 3, 4))}")
-    print(f"Test 17:	{v.cross(v)}")
