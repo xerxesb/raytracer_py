@@ -8,6 +8,7 @@ from lib.point3 import Point3
 from lib.vec3 import Vec3
 from lib.hittable import Hittable, Hittables, HitRecord
 from lib.sphere import Sphere
+from lib.interval import Interval
 
 from lib.core import *
 
@@ -15,7 +16,7 @@ from lib.core import *
 def ray_color(r : Ray, world : Hittable) -> Color:
   rec : HitRecord = HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0)
 
-  if world.hit(r, 0, infinity, rec):
+  if world.hit(r, Interval(0, infinity), rec):
     return 0.5 * (Color(rec.normal.x, rec.normal.y, rec.normal.z) + Color(1, 1, 1))
 
   unit_direction : Vec3 = Vec3.unit_vector(r.direction)

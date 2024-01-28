@@ -7,13 +7,14 @@ from lib.hittable import Hittable, HitRecord
 from lib.point3 import Point3
 from lib.vec3 import Vec3
 from lib.ray import Ray
+from lib.interval import Interval
 
 class Sphere(Hittable):
     def __init__(self, center : Point3, radius : float):
         self.center = center
         self.radius = radius
 
-    def hit(self, r : Ray, ray_tmin : float, ray_tmax : float, rec : HitRecord) -> bool:
+    def hit(self, r : Ray, ray_t, rec : HitRecord) -> bool:
         oc : Vec3 = r.origin - self.center
         a : float = r.direction.length_squared()
         half_b : Vec3 = Vec3.dot(oc, r.direction)
@@ -27,9 +28,9 @@ class Sphere(Hittable):
 
         # Find the nearest root that lies in the acceptable range
         root : float = (-half_b - sqrtd) / a
-        if root < ray_tmin or ray_tmax < root:
+        if not ray_t.surrounds(root):
             root = (-half_b + sqrtd) / a
-            if root < ray_tmin or ray_tmax < root:
+            if not ray_t.surrounds(root):
                 return False
         
         rec.t = root
@@ -49,6 +50,6 @@ if __name__ == "__main__":
     print(f"Test 1:		{sp}")
     print(f"Test 2:		{sp.center}")
     print(f"Test 3:		{sp.radius}")
-    print(f"Test 4:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), 0, 100, HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
-    print(f"Test 5:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), 0, 1, HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
-    print(f"Test 6:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), 0, 10, HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
+    print(f"Test 4:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 100), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
+    print(f"Test 5:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 1), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
+    print(f"Test 6:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 10), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")

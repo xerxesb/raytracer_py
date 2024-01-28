@@ -5,9 +5,10 @@ if __name__ == "__main__":
 from lib.ray import Ray
 from lib.point3 import Point3
 from lib.vec3 import Vec3
+from lib.interval import Interval
 
 class HitRecord:
-  pass
+    pass
 
 class HitRecord:
     def __init__(self, p : Point3, normal : Vec3, t : float, front_face : bool = True):
@@ -32,7 +33,7 @@ class HitRecord:
         return f"p: {self.p}, normal: {self.normal}, t: {self.t}, front_face: {self.front_face}"
 
 class Hittable:
-    def hit(self, r : Ray, ray_tmin : float, ray_tmax : float, rec : HitRecord) -> bool:
+    def hit(self, r : Ray, ray_t : Interval, rec : HitRecord) -> bool:
         raise NotImplementedError
 
 class Hittables(Hittable):
@@ -41,48 +42,48 @@ class Hittables(Hittable):
 
     def add(self, object : Hittable):
         self.objects.append(object)
-      
+
     def clear(self):
         self.objects.clear()
 
-    def hit(self, r : Ray, ray_tmin : float, ray_tmax : float, rec : HitRecord) -> bool:
+    def hit(self, r : Ray, ray_t : Interval, rec : HitRecord) -> bool:
         temp_rec : HitRecord = HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0)
         hit_anything : bool = False
-        closest_so_far : float = ray_tmax
+        closest_so_far : float = ray_t.max
 
         for object in self.objects:
-            if object.hit(r, ray_tmin, closest_so_far, temp_rec):
+            if object.hit(r, Interval(ray_t.min, closest_so_far), temp_rec):
                 hit_anything = True
                 closest_so_far = temp_rec.t
                 rec.replace(temp_rec)
         
         return hit_anything
 
+
 # Test
 if __name__ == "__main__":
-  class TestHittable(Hittable):
-    def __init__(self, is_hit : bool = True):
-      self.is_hit = is_hit
+    class TestHittable(Hittable):
+        def __init__(self, is_hit : bool = True):
+            self.is_hit = is_hit
 
-    def hit(self, r : Ray, ray_tmin : float, ray_tmax : float, rec : HitRecord) -> bool:
-      return self.is_hit
+        def hit(self, r : Ray, ray_t : Interval, rec : HitRecord) -> bool:
+            return self.is_hit
 
+    h : Hittable = Hittable()
+    hr : HitRecord = HitRecord(Point3(1, 2, 3), Vec3(1, 2, 3), 4)
+    print(f"Test 1:		{h}")
+    print(f"Test 2:		{hr}")
 
-  h : Hittable = Hittable()
-  hr : HitRecord = HitRecord(Point3(1, 2, 3), Vec3(1, 2, 3), 4)
-  print(f"Test 1:		{h}")
-  print(f"Test 2:		{hr}")
+    hr.set_face_normal(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Vec3(0, 0, 0))
+    print(f"Test 3:		{hr}") 
 
-  hr.set_face_normal(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Vec3(0, 0, 0))
-  print(f"Test 3:		{hr}") 
+    hr2 : HitRecord = HitRecord(Point3(4, 5, 6), Vec3(4, 5, 6), 7)
+    hr.replace(hr2)
+    print(f"Test 4:		{hr}")
 
-  hr2 : HitRecord = HitRecord(Point3(4, 5, 6), Vec3(4, 5, 6), 7)
-  hr.replace(hr2)
-  print(f"Test 4:		{hr}")
-
-  hs1 : Hittables = Hittables([TestHittable(False)])
-  hs2 : Hittables = Hittables([TestHittable(False), TestHittable(False)])
-  hs3 : Hittables = Hittables([TestHittable(False), TestHittable(False), TestHittable(True)])
-  print(f"Test 5:		{hs1.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), 0, 100, HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
-  print(f"Test 6:		{hs2.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), 0, 100, HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")  
-  print(f"Test 7:		{hs3.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), 0, 100, HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
+    hs1 : Hittables = Hittables([TestHittable(False)])
+    hs2 : Hittables = Hittables([TestHittable(False), TestHittable(False)])
+    hs3 : Hittables = Hittables([TestHittable(False), TestHittable(False), TestHittable(True)])
+    print(f"Test 5:		{hs1.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 100), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
+    print(f"Test 6:		{hs2.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 100), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")  
+    print(f"Test 7:		{hs3.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 100), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
