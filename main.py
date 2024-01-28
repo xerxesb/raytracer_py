@@ -6,22 +6,17 @@ from lib.color import Color
 from lib.ray import Ray
 from lib.point3 import Point3
 from lib.vec3 import Vec3
+from lib.hittable import Hittable, Hittables, HitRecord
+from lib.sphere import Sphere
+
+from lib.core import *
 
 # Helper functions
+def ray_color(r : Ray, world : Hittable) -> Color:
+  rec : HitRecord = HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0)
 
-def hit_sphere(center : Point3, radius : float, r : Ray) -> float:
-  oc : Vec3 = r.origin - center
-  a : Vec3 = r.direction.length_squared()
-  half_b : Vec3 = Vec3.dot(oc, r.direction)
-  c : float = oc.length_squared() - radius * radius
-  discriminant : float = half_b * half_b - a * c
-  return -1.0 if discriminant < 0 else (-half_b - math.sqrt(discriminant)) / a
-
-def ray_color(r : Ray) -> Color:
-  t : float = hit_sphere(Point3(0, 0, -1), 0.5, r)
-  if (t > 0.0):
-    n : Vec3 = Vec3.unit_vector(r.at(t) - Vec3(0, 0, -1))
-    return 0.5 * Color(n.x + 1, n.y + 1, n.z + 1)
+  if world.hit(r, 0, infinity, rec):
+    return 0.5 * (Color(rec.normal.x, rec.normal.y, rec.normal.z) + Color(1, 1, 1))
 
   unit_direction : Vec3 = Vec3.unit_vector(r.direction)
   t : float = 0.5 * (unit_direction.y + 1.0)
@@ -32,6 +27,12 @@ def ray_color(r : Ray) -> Color:
 width : int = 400
 aspect_ratio : float = 16.0 / 9.0
 height : int = (int) (width / aspect_ratio) if (int) (width / aspect_ratio) >= 1 else 1
+
+# World
+world : Hittables = Hittables([
+  Sphere(Point3(0, 0, -1), 0.5),
+  Sphere(Point3(0, -100.5, -1), 100)
+])
 
 # Camera
 focal_length : float = 1.0
@@ -61,7 +62,7 @@ if __name__ == "__main__":
       ray_direction : Vec3 = pixel_center - camera_center
       r : Ray = Ray(camera_center, ray_direction)
 
-      pixel_color = ray_color(r)
+      pixel_color = ray_color(r, world)
       print(f"{pixel_color}")
 
   print(f"\nDone", file=sys.stderr, end="\n")
