@@ -12,6 +12,11 @@ https://raytracing.github.io/books/RayTracingInOneWeekend.html
 Instructions
 ====
 
+Setup:
+> pip3 install tqdm
+
+<br />
+
 To run the ray tracer (on Mac),
 > ./run.sh
 

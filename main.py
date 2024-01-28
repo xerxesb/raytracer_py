@@ -6,8 +6,9 @@ from lib.camera import Camera
 if __name__ == "__main__":
     WIDTH = 400
     ASPECT_RATIO = 16.0 / 9.0
+    SAMPLES_PER_PIXEL = 20
 
-    cam : Camera = Camera(ASPECT_RATIO, WIDTH)
+    cam : Camera = Camera(ASPECT_RATIO, WIDTH, SAMPLES_PER_PIXEL)
 
     world : Hittables = Hittables([
       Sphere(Point3(0, 0, -1), 0.5),

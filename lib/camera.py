@@ -1,4 +1,6 @@
 import sys
+from multiprocessing import Pool, cpu_count
+from tqdm import tqdm
 
 if __name__ == "__main__":
     sys.path.append("..")
@@ -26,7 +28,7 @@ class Camera:
         pixel_delta_v: The vertical delta between pixels
         samples_per_pixel: The number of samples per pixel
     '''
-    def __init__(self, aspect_ratio : float, width : int):
+    def __init__(self, aspect_ratio : float = 16/9, width : int = 400, samples_per_pixel : int = 20):
         self.aspect_ratio : float = aspect_ratio
         self.width : int = width
         self.height : int = (int) (width / aspect_ratio) if (int) (width / aspect_ratio) >= 1 else 1
@@ -35,23 +37,35 @@ class Camera:
         self.pixel_delta_u : Vec3 = Vec3(0, 0, 0)
         self.pixel_delta_v : Vec3 = Vec3(0, 0, 0)
         self.pixel00_loc : Point3 = Point3(0, 0, 0)
-        self.samples_per_pixel : int = 4
+        self.samples_per_pixel : int = samples_per_pixel
+
+    def process_pixel(self, args):
+        i, j, self, world = args
+        pixel_color : Color = Color(0, 0, 0)
+        for _ in range(self.samples_per_pixel):
+            r : Ray = self.get_ray(i, j)
+            pixel_color += self.ray_color(r, world)
+        return pixel_color.get_aliased_color(self.samples_per_pixel)
 
     def render(self, world : Hittable):
-        self.__initialize() # TODO: Note to future self - the exercise made me do this. I think we can initialize in the ctor
+        self.__initialize() 
         print(f"P3\n{self.width} {self.height}\n255\n")
 
-        for j in range(self.height):
-            print(f"\rScanlines remaining: {self.height - j}", file=sys.stderr, end="\n")
-            for i in range(self.width):
-                pixel_color : Color = Color(0, 0, 0)
-                for _ in range(self.samples_per_pixel):
-                    r : Ray = self.get_ray(i, j)
-                    pixel_color += self.ray_color(r, world)
+        with Pool(cpu_count()) as p:
+            pixels = list(tqdm(p.imap(self.process_pixel, 
+                                        [(i, j, self, world) 
+                                            for j in range(self.height) 
+                                            for i in range(self.width)
+                                        ])
+                            , total=self.width*self.height
+                            , desc="Rendering"
+                            , unit="pixels"
+                            , miniters=200))
+        
+        for pixel in pixels:
+            print(f"{pixel}")
 
-                print(f"{pixel_color.get_aliased_color(self.samples_per_pixel)}")
-
-        print(f"\nDone", file=sys.stderr, end="\n")
+        print(f"Done", file=sys.stderr, end="\n")
 
     def __initialize(self):
         focal_length : float = 1.0
