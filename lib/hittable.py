@@ -11,7 +11,7 @@ class HitRecord:
     pass
 
 class HitRecord:
-    def __init__(self, p : Point3, normal : Vec3, t : float, front_face : bool = True):
+    def __init__(self, p : Point3 = Point3(0, 0, 0), normal : Vec3 = Vec3(0, 0, 0), t : float = 0, front_face : bool = True):
         self.p = p
         self.normal = normal
         self.t = t
@@ -59,18 +59,19 @@ class Hittables(Hittable):
         
         return hit_anything
 
+class TestHittable(Hittable):
+    def __init__(self, is_hit : bool = True):
+        self.is_hit = is_hit
+
+    def hit(self, r : Ray, ray_t : Interval, rec : HitRecord) -> bool:
+        return self.is_hit
+
 
 # Test
 if __name__ == "__main__":
-    class TestHittable(Hittable):
-        def __init__(self, is_hit : bool = True):
-            self.is_hit = is_hit
-
-        def hit(self, r : Ray, ray_t : Interval, rec : HitRecord) -> bool:
-            return self.is_hit
 
     h : Hittable = Hittable()
-    hr : HitRecord = HitRecord(Point3(1, 2, 3), Vec3(1, 2, 3), 4)
+    hr : HitRecord = HitRecord()
     print(f"Test 1:		{h}")
     print(f"Test 2:		{hr}")
 
