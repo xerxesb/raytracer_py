@@ -71,6 +71,9 @@ class Vec3:
                         other / self.z
                         )
 
+    def __neg__(self):
+        return Vec3(-self.x, -self.y, -self.z)
+
     def length(self):
         return math.sqrt(self.length_squared())
 
@@ -113,8 +116,9 @@ if __name__ == "__main__":
     print(f"Test 9:		{v * 2}")
     print(f"Test 10:	{2 * v}")
     print(f"Test 11:	{v / v}")
-    print(f"Test 12:	{v * Vec3(2, 3, 4)}")
-    print(f"Test 13:	{Vec3(2, 3, 4) * v}")
-    print(f"Test 14:	{Vec3.dot(v, Vec3(2, 3, 4))}")
-    print(f"Test 15:	{Vec3.cross(v, Vec3(2, 3, 4))}")
-    print(f"Test 16:	{Vec3.unit_vector(v)}")
+    print(f"Test 12:	{-v}")
+    print(f"Test 13:	{v * Vec3(2, 3, 4)}")
+    print(f"Test 14:	{Vec3(2, 3, 4) * v}")
+    print(f"Test 15:	{Vec3.dot(v, Vec3(2, 3, 4))}")
+    print(f"Test 16:	{Vec3.cross(v, Vec3(2, 3, 4))}")
+    print(f"Test 17:	{Vec3.unit_vector(v)}")

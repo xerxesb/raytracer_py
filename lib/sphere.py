@@ -34,7 +34,8 @@ class Sphere(Hittable):
         
         rec.t = root
         rec.p = r.at(rec.t)
-        rec.normal = (rec.p - self.center) / self.radius
+        outward_normal : Vec3 = (rec.p - self.center) / self.radius
+        rec.set_face_normal(r, outward_normal)
         return True
 
     def __str__(self):
