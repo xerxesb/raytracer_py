@@ -16,6 +16,11 @@ class Interval:
     def surrounds(self, x : float) -> bool:
         return self.min < x and x < self.max
 
+    def clamp(self, x : float) -> float:
+        return (self.min if x < self.min 
+                else self.max if x > self.max 
+                else x)
+
     def __str__(self):
         return f"min: {self.min}, max: {self.max}"
     
