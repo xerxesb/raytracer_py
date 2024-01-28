@@ -14,6 +14,8 @@ from lib.vec3 import Vec3
 
 from lib.core import *
 
+USE_MULTI_THREADING : bool = True
+
 class Camera:
     '''A camera class that renders a scene
     
@@ -40,7 +42,7 @@ class Camera:
         self.samples_per_pixel : int = samples_per_pixel
 
     def process_pixel(self, args):
-        i, j, self, world = args
+        i, j, world = args
         pixel_color : Color = Color(0, 0, 0)
         for _ in range(self.samples_per_pixel):
             r : Ray = self.get_ray(i, j)
@@ -51,17 +53,22 @@ class Camera:
         self.__initialize() 
         print(f"P3\n{self.width} {self.height}\n255\n")
 
-        with Pool(cpu_count()) as p:
-            pixels = list(tqdm(p.imap(self.process_pixel, 
-                                        [(i, j, self, world) 
-                                            for j in range(self.height) 
-                                            for i in range(self.width)
-                                        ])
-                            , total=self.width*self.height
-                            , desc="Rendering"
-                            , unit="pixels"
-                            , miniters=200))
-        
+        if USE_MULTI_THREADING:
+            with Pool(cpu_count()) as p:
+                pixels = list(tqdm(p.imap(self.process_pixel, 
+                                            [(i, j, world) 
+                                                for j in range(self.height) 
+                                                for i in range(self.width)
+                                            ])
+                                , total=self.width*self.height
+                                , desc="Rendering"
+                                , unit="pixels"
+                                , miniters=200))
+        else:   # Single threaded - for debugging
+            pixels = tqdm( [(i, j) for j in range(self.height) for i in range(self.width) ])
+            pixels = [self.process_pixel((i, j, world)) for i, j in pixels]
+
+
         for pixel in pixels:
             print(f"{pixel}")
 
