@@ -30,7 +30,7 @@ class Camera:
         pixel_delta_v: The vertical delta between pixels
         samples_per_pixel: The number of samples per pixel
     '''
-    def __init__(self, aspect_ratio : float = 16/9, width : int = 400, samples_per_pixel : int = 20):
+    def __init__(self, aspect_ratio : float = 16/9, width : int = 400, samples_per_pixel : int = 20, max_depth : int = 50):
         self.aspect_ratio : float = aspect_ratio
         self.width : int = width
         self.height: int = max((int) (width / aspect_ratio), 1)
@@ -40,13 +40,14 @@ class Camera:
         self.pixel_delta_v : Vec3 = Vec3(0, 0, 0)
         self.pixel00_loc : Point3 = Point3(0, 0, 0)
         self.samples_per_pixel : int = samples_per_pixel
+        self.max_depth : int = max_depth
 
     def process_pixel(self, args):
         i, j, world = args
         pixel_color : Color = Color(0, 0, 0)
         for _ in range(self.samples_per_pixel):
             r : Ray = self.get_ray(i, j)
-            pixel_color += self.ray_color(r, world)
+            pixel_color += self.ray_color(r, self.max_depth, world)
         return pixel_color.get_aliased_color(self.samples_per_pixel)
 
     def render(self, world : Hittable):
@@ -88,13 +89,16 @@ class Camera:
         viewport_upper_left : Point3 = self.camera_center - Vec3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2 
         self.pixel00_loc : Point3 = viewport_upper_left + 0.5 * (self.pixel_delta_u + self.pixel_delta_v)
 
-    def ray_color(self, r : Ray, world : Hittable) -> Color:
+    def ray_color(self, r : Ray, depth : int, world : Hittable) -> Color:
         rec : HitRecord = HitRecord()
+
+        if (depth <= 0):
+            return Color(0, 0, 0)
 
         # If the ray hits an object, return the color of the object
         if world.hit(r, Interval(0, infinity), rec):
             direction : Vec3 = Vec3.random_on_hemisphere(rec.normal)
-            return 0.5 * self.ray_color(Ray(rec.p, direction), world)
+            return 0.5 * self.ray_color(Ray(rec.p, direction), depth - 1, world)
 
         # Otherwise, return the background color
         unit_direction : Vec3 = Vec3.unit_vector(r.direction)
