@@ -1,3 +1,5 @@
+import math
+
 if __name__ == "__main__":
     import sys
     sys.path.append("..")
@@ -52,11 +54,13 @@ class Color(Vec3):
         b = self.z * scale
 
         intensity : Interval = Interval(0.0, 0.999)
-        return Color(intensity.clamp(r), intensity.clamp(g), intensity.clamp(b))
+        return Color.linear_to_gamma(Color(intensity.clamp(r), intensity.clamp(g), intensity.clamp(b)))
 
+    @staticmethod
+    def linear_to_gamma(color : Color):
+        return Color(math.sqrt(color.x), math.sqrt(color.y), math.sqrt(color.z))
 
-
-# Test
+# Tests
 if __name__ == "__main__":
     p = Color(0.1, 0.2, 1)
     print(f"Test 1:		{p}")
@@ -68,3 +72,4 @@ if __name__ == "__main__":
     print(f"Test 7:		{p / p}")
     print(f"Test 8:		{p.get_aliased_color(1)}")
     print(f"Test 9:		{p.get_aliased_color(100)}")
+    print(f"Test 10:	{Color.linear_to_gamma(Color(0.1, 0.2, 0.3))}")
