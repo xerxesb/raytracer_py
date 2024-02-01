@@ -96,7 +96,7 @@ class Camera:
             return Color(0, 0, 0)
 
         # If the ray hits an object, return the color of the object
-        if world.hit(r, Interval(0, infinity), rec):
+        if world.hit(r, Interval(0.001, infinity), rec):
             direction : Vec3 = Vec3.random_on_hemisphere(rec.normal)
             return 0.5 * self.ray_color(Ray(rec.p, direction), depth - 1, world)
 
