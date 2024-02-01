@@ -13,7 +13,9 @@ Instructions
 ====
 
 Setup:
-> pip3 install tqdm
+>$ pip3 install tqdm
+> 
+>$ brew install entr
 
 <br />
 
