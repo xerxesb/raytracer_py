@@ -3,10 +3,20 @@ from lib.hittable import Hittables
 from lib.sphere import Sphere
 from lib.camera import Camera
 
+DEFINITION = (
+    "LOW"
+    # "MEDIUM"
+    # "HIGH"
+    # "ULTRA"
+)
+
+ALL_WIDTHS = { "LOW": 400, "MEDIUM": 800, "HIGH": 1200, "ULTRA": 1600}
+ALL_SAMPLES_PER_PIXEL = { "LOW": 20, "MEDIUM": 40, "HIGH": 60, "ULTRA": 100 }
+
 if __name__ == "__main__":
-    WIDTH = 400
     ASPECT_RATIO = 16.0 / 9.0
-    SAMPLES_PER_PIXEL = 20
+    WIDTH = ALL_WIDTHS[DEFINITION]
+    SAMPLES_PER_PIXEL = ALL_SAMPLES_PER_PIXEL[DEFINITION]
 
     cam : Camera = Camera(ASPECT_RATIO, WIDTH, SAMPLES_PER_PIXEL)
 
