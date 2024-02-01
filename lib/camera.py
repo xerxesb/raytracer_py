@@ -130,6 +130,6 @@ if __name__ == "__main__":
     print(f"Test 6:		{c.pixel_delta_u}")
     print(f"Test 7:		{c.pixel_delta_v}")
     print(f"Test 8:		{c.pixel00_loc}")
-    print(f"Test 9:		{c.ray_color(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), TestHittable())}")
+    print(f"Test 9:		{c.ray_color(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), 10, TestHittable())}")
     print(f"Test 10:	{c.get_ray(10, 10)}")
     print(f"Test 11:	{c.pixel_sample_square()}")

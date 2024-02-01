@@ -10,5 +10,14 @@ do
   echo -----------------------
   echo $f
   python3 "$f"
+  if [ $? -eq 0 ]; then
+    echo "OK"
+  else
+    echo "FAIL"
+    break
+  fi
   echo ""
 done
+
+echo -----------------------
+echo "Test Files Passed: $(echo $FILES | wc -w)"
