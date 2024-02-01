@@ -33,7 +33,7 @@ class Camera:
     def __init__(self, aspect_ratio : float = 16/9, width : int = 400, samples_per_pixel : int = 20):
         self.aspect_ratio : float = aspect_ratio
         self.width : int = width
-        self.height : int = (int) (width / aspect_ratio) if (int) (width / aspect_ratio) >= 1 else 1
+        self.height: int = max((int) (width / aspect_ratio), 1)
 
         self.camera_center : Point3 = Point3(0, 0, 0)
         self.pixel_delta_u : Vec3 = Vec3(0, 0, 0)
@@ -50,7 +50,7 @@ class Camera:
         return pixel_color.get_aliased_color(self.samples_per_pixel)
 
     def render(self, world : Hittable):
-        self.__initialize() 
+        self.__initialize()
         print(f"P3\n{self.width} {self.height}\n255\n")
 
         if USE_MULTI_THREADING:
@@ -72,7 +72,7 @@ class Camera:
         for pixel in pixels:
             print(f"{pixel}")
 
-        print(f"Done", file=sys.stderr, end="\n")
+        print("Done", file=sys.stderr, end="\n")
 
     def __initialize(self):
         focal_length : float = 1.0
@@ -93,7 +93,8 @@ class Camera:
 
         # If the ray hits an object, return the color of the object
         if world.hit(r, Interval(0, infinity), rec):
-            return 0.5 * (Color(rec.normal.x, rec.normal.y, rec.normal.z) + Color(1, 1, 1))
+            direction : Vec3 = Vec3.random_on_hemisphere(rec.normal)
+            return 0.5 * self.ray_color(Ray(rec.p, direction), world)
 
         # Otherwise, return the background color
         unit_direction : Vec3 = Vec3.unit_vector(r.direction)
