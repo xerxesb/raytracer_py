@@ -2,35 +2,11 @@ if __name__ == "__main__":
     import sys
     sys.path.append("..")
 
-from lib.ray import Ray
-from lib.point3 import Point3
-from lib.vec3 import Vec3
 from lib.interval import Interval
-
-class HitRecord:
-    pass
-
-class HitRecord:
-    def __init__(self, p : Point3 = Point3(0, 0, 0), normal : Vec3 = Vec3(0, 0, 0), t : float = 0, front_face : bool = True):
-        self.p = p
-        self.normal = normal
-        self.t = t
-        self.front_face = front_face
-
-    def replace(self, other : HitRecord) -> None:
-        self.p = other.p
-        self.normal = other.normal
-        self.t = other.t
-        self.front_face = other.front_face
-
-    def set_face_normal(self, r : Ray, outward_normal : Vec3) -> None:
-        # Sets the hit record normal vector
-        # Note: The outward_normal is assumed to be a unit vector
-        self.front_face = Vec3.dot(r.direction, outward_normal) < 0
-        self.normal = outward_normal if self.front_face else -outward_normal
-
-    def __str__(self):
-        return f"p: {self.p}, normal: {self.normal}, t: {self.t}, front_face: {self.front_face}"
+from lib.hitrecord import HitRecord
+from lib.point3 import Point3
+from lib.ray import Ray
+from lib.vec3 import Vec3
 
 class Hittable:
     def hit(self, r : Ray, ray_t : Interval, rec : HitRecord) -> bool:
@@ -69,19 +45,6 @@ class TestHittable(Hittable):
 
 # Test
 if __name__ == "__main__":
-
-    h : Hittable = Hittable()
-    hr : HitRecord = HitRecord()
-    print(f"Test 1:		{h}")
-    print(f"Test 2:		{hr}")
-
-    hr.set_face_normal(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Vec3(0, 0, 0))
-    print(f"Test 3:		{hr}") 
-
-    hr2 : HitRecord = HitRecord(Point3(4, 5, 6), Vec3(4, 5, 6), 7)
-    hr.replace(hr2)
-    print(f"Test 4:		{hr}")
-
     hs1 : Hittables = Hittables([TestHittable(False)])
     hs2 : Hittables = Hittables([TestHittable(False), TestHittable(False)])
     hs3 : Hittables = Hittables([TestHittable(False), TestHittable(False), TestHittable(True)])

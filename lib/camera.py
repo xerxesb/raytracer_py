@@ -6,7 +6,8 @@ if __name__ == "__main__":
     sys.path.append("..")
 
 from lib.color import Color
-from lib.hittable import Hittable, HitRecord, TestHittable, Hittables
+from lib.hittable import Hittable, TestHittable, Hittables
+from lib.hitrecord import HitRecord
 from lib.interval import Interval
 from lib.point3 import Point3
 from lib.ray import Ray

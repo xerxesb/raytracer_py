@@ -4,15 +4,17 @@ if __name__ == "__main__":
 
 import math
 from lib.hittable import Hittable, HitRecord
+from lib.material import Material
 from lib.point3 import Point3
 from lib.vec3 import Vec3
 from lib.ray import Ray
 from lib.interval import Interval
 
 class Sphere(Hittable):
-    def __init__(self, center : Point3, radius : float):
+    def __init__(self, center : Point3, radius : float, material : Material):
         self.center = center
         self.radius = radius
+        self.material = material
 
     def hit(self, r : Ray, ray_t, rec : HitRecord) -> bool:
         oc : Vec3 = r.origin - self.center
@@ -37,6 +39,7 @@ class Sphere(Hittable):
         rec.p = r.at(rec.t)
         outward_normal : Vec3 = (rec.p - self.center) / self.radius
         rec.set_face_normal(r, outward_normal)
+        rec.set_material(self.material)
         return True
 
     def __str__(self):
@@ -46,10 +49,11 @@ class Sphere(Hittable):
 
 # Test
 if __name__ == "__main__":
-    sp : Sphere = Sphere(Point3(1, 2, 3), 4)
+    sp : Sphere = Sphere(Point3(1, 2, 3), 4, Material())
     print(f"Test 1:		{sp}")
     print(f"Test 2:		{sp.center}")
     print(f"Test 3:		{sp.radius}")
-    print(f"Test 4:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 100), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
-    print(f"Test 5:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 1), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
-    print(f"Test 6:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 10), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
+    print(f"Test 4:		{sp.material}")
+    print(f"Test 5:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 100), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
+    print(f"Test 6:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 1), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
+    print(f"Test 7:		{sp.hit(Ray(Point3(0, 0, 0), Vec3(1, 1, 1)), Interval(0, 10), HitRecord(Point3(0, 0, 0), Vec3(0, 0, 0), 0))}")
