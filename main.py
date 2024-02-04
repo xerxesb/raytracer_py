@@ -1,6 +1,7 @@
+from lib.color import Color
 from lib.point3 import Point3
 from lib.hittable import Hittables
-from lib.material import Material
+from lib.material import Lambertain, Metal
 from lib.sphere import Sphere
 from lib.camera import Camera
 
@@ -23,8 +24,8 @@ if __name__ == "__main__":
     cam : Camera = Camera(ASPECT_RATIO, WIDTH, SAMPLES_PER_PIXEL)
 
     world : Hittables = Hittables([
-      Sphere(Point3(0, 0, -1), 0.5, Material()),
-      Sphere(Point3(0, -100.5, -1), 100, Material())
+      Sphere(Point3(0, 0, -1), 0.5, Lambertain(Color(0.7, 0.1, 0.2))),
+      Sphere(Point3(0, -100.5, -1), 100, Metal(Color(0.8, 0.8, 0.0)))
     ])
 
     cam.render(world)

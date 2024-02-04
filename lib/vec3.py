@@ -80,12 +80,22 @@ class Vec3:
     def __neg__(self):
         return Vec3(-self.x, -self.y, -self.z)
 
+    def replace(self, other : Vec3) -> None:
+        self.x = other.x
+        self.y = other.y
+        self.z = other.z
+
     def length(self):
         return math.sqrt(self.length_squared())
 
     def length_squared(self):
         return self.x * self.x + self.y * self.y + self.z * self.z
     
+    def near_zero(self) -> bool:
+        # Return true if the vector is close to zero in all dimensions
+        s : float = 1e-8
+        return (abs(self.x) < s) and (abs(self.y) < s) and (abs(self.z) < s)
+
     def __str__(self):
         return f"({self.x}, {self.y}, {self.z})"
 
@@ -131,6 +141,10 @@ class Vec3:
         on_unit_sphere : Vec3 = Vec3.random_unit_vector()
         return on_unit_sphere if Vec3.dot(on_unit_sphere, normal) > 0 else -on_unit_sphere
 
+    @staticmethod
+    def reflect(v : Vec3, n : Vec3) -> Vec3:
+        return v - 2 * Vec3.dot(v, n) * n
+
 
 # Test
 if __name__ == "__main__":
@@ -156,3 +170,14 @@ if __name__ == "__main__":
     print(f"Test 19:	{Vec3.random(1, 2)}")
     print(f"Test 20:	{Vec3.random_in_unit_sphere()}")
     print(f"Test 21:	{Vec3.random_unit_vector()}")
+    print(f"Test 22:	{Vec3.random_on_hemisphere(Vec3(1, 1, 1))}")
+
+    v.replace(Vec3(4, 5, 6))
+    print(f"Test 23:	{v}")
+
+    v = Vec3(0, 0, 0)
+    print(f"Test 24:	{v.near_zero()}")
+
+    v = Vec3(0.00000001, 0.00000001, 0.00000001)
+    print(f"Test 25:	{v.near_zero()}")
+    print(f"Test 26:	{Vec3.reflect(Vec3(1, 1, 1), Vec3(1, 1, 1))}")

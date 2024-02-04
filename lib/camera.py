@@ -98,6 +98,10 @@ class Camera:
 
         # If the ray hits an object, return the color of the object
         if world.hit(r, Interval(0.001, infinity), rec):
+            scattered : Ray = Ray(Point3(0, 0, 0), Vec3(0, 0, 0))
+            attenuation : Color = Color(0, 0, 0)
+            if rec.material.scatter(r, rec, attenuation, scattered):
+                return attenuation * self.ray_color(scattered, depth - 1, world)
             direction : Vec3 = rec.normal + Vec3.random_unit_vector()
             return 0.5 * self.ray_color(Ray(rec.p, direction), depth - 1, world)
 
