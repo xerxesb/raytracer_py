@@ -2,6 +2,7 @@ if __name__ == "__main__":
     import sys
     sys.path.append("..")
 
+from lib.color import Color
 from lib.interval import Interval
 from lib.hitrecord import HitRecord
 from lib.point3 import Point3
@@ -35,11 +36,18 @@ class Hittables(Hittable):
         
         return hit_anything
 
+class TestMaterial():
+    def scatter(self, r_in : Ray, rec : HitRecord, attenuation : Color, scattered : Ray) -> bool:
+        return False
+
+
 class TestHittable(Hittable):
     def __init__(self, is_hit : bool = True):
         self.is_hit = is_hit
+        self.material = TestMaterial()
 
     def hit(self, r : Ray, ray_t : Interval, rec : HitRecord) -> bool:
+        rec.set_material(self.material)
         return self.is_hit
 
 
