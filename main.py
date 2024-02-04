@@ -26,8 +26,8 @@ if __name__ == "__main__":
     mat_ground : Material = Lambertain(Color(0.8, 0.8, 0.0))
     mat_ball_center : Material = Lambertain(Color(0.7, 0.3, 0.3))
     mat_ball_left : Material = Metal(Color(0.8, 0.8, 0.8))
-    mat_ball_right : Material = Metal(Color(0.8, 0.6, 0.2))
-    mat_ball_behind : Material = Metal(Color(0.1, 0.1, 1))
+    mat_ball_right : Material = Metal(Color(0.8, 0.6, 0.2), 0.3)
+    mat_ball_behind : Material = Metal(Color(0.1, 0.1, 1), 0.6)
 
     world : Hittables = Hittables([
         Sphere(Point3(0.0, -100.5, -1.0), 100.0, mat_ground),
