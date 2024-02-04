@@ -9,10 +9,11 @@ DEFINITION = (
     # "MEDIUM"
     # "HIGH"
     # "ULTRA"
+    # "4K"
 )
 
-ALL_WIDTHS = { "LOW": 400, "MEDIUM": 800, "HIGH": 1200, "ULTRA": 1600}
-ALL_SAMPLES_PER_PIXEL = { "LOW": 20, "MEDIUM": 40, "HIGH": 60, "ULTRA": 100 }
+ALL_WIDTHS = { "LOW": 400, "MEDIUM": 800, "HIGH": 1200, "ULTRA": 1600, "4K" : 3840 }
+ALL_SAMPLES_PER_PIXEL = { "LOW": 20, "MEDIUM": 40, "HIGH": 60, "ULTRA": 100, "4K" : 400 }
 
 if __name__ == "__main__":
     ASPECT_RATIO = 16.0 / 9.0
