@@ -1,7 +1,7 @@
 from lib.color import Color
 from lib.point3 import Point3
 from lib.hittable import Hittables
-from lib.material import Lambertain, Metal, Material
+from lib.material import Dielectric, Lambertain, Metal, Material
 from lib.sphere import Sphere
 from lib.camera import Camera
 
@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     mat_ground : Material = Lambertain(Color(0.8, 0.8, 0.0))
     mat_ball_center : Material = Lambertain(Color(0.7, 0.3, 0.3))
-    mat_ball_left : Material = Metal(Color(0.8, 0.8, 0.8))
+    mat_ball_left : Material = Dielectric(1.5)
     mat_ball_right : Material = Metal(Color(0.8, 0.6, 0.2), 0.3)
     mat_ball_behind : Material = Metal(Color(0.1, 0.1, 1), 0.6)
 

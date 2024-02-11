@@ -145,6 +145,13 @@ class Vec3:
     def reflect(v : Vec3, n : Vec3) -> Vec3:
         return v - 2 * Vec3.dot(v, n) * n
 
+    @staticmethod
+    def refract(uv : Vec3, n : Vec3, etai_over_etat : float) -> Vec3:
+        cos_theta : float = min(Vec3.dot(-uv, n), 1.0)
+        r_out_perp : Vec3 = etai_over_etat * (uv + cos_theta * n)
+        r_out_parallel : Vec3 = -math.sqrt(abs(1.0 - r_out_perp.length_squared())) * n
+        return r_out_perp + r_out_parallel
+
 
 # Test
 if __name__ == "__main__":
@@ -181,3 +188,4 @@ if __name__ == "__main__":
     v = Vec3(0.00000001, 0.00000001, 0.00000001)
     print(f"Test 25:	{v.near_zero()}")
     print(f"Test 26:	{Vec3.reflect(Vec3(1, 1, 1), Vec3(1, 1, 1))}")
+    print(f"Test 27:	{Vec3.refract(Vec3(1, 1, 1), Vec3(1, 1, 1), 0.0)}")
